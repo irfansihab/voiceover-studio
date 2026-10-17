@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VoxStudio Pro - Voice Over Studio & Audio AI Workstation</title>
+  <meta name="description" content="Aplikasi Voice Over Profesional dengan fitur lengkap: Text-to-Speech AI multi-suara, perekam mic studio dengan VU meter, teleprompter cerdas, DSP effects rack, background music auto-ducking, dan export WAV & SRT.">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- Top Studio Header -->
+  <header class="studio-header">
+    <div class="brand-wrapper">
+      <div class="brand-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
+          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
+        </svg>
+      </div>
+      <div class="brand-text">
+        <h1>VoxStudio <span class="brand-badge">PRO</span></h1>
+      </div>
+      <input type="text" id="input-project-name" class="project-title-input" value="Proyek Voiceover Baru" title="Klik untuk mengubah nama proyek">
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="studio-nav-tabs" aria-label="Studio Modes">
+      <button id="tab-btn-tts" class="nav-tab-btn active" data-tab="tab-tts">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+        AI Script & TTS
+      </button>
+      <button id="tab-btn-mic" class="nav-tab-btn" data-tab="tab-mic">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 2.99-1.34 2.99-3L15 5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.41 2.72 6.23 6 6.72V21h2v-3.28c3.28-.48 6-3.3 6-6.72h-1.7z"/></svg>
+        Studio Mic & Prompter
+      </button>
+      <button id="tab-btn-fx" class="nav-tab-btn" data-tab="tab-fx">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+        DSP Audio FX
+      </button>
+      <button id="tab-btn-bgm" class="nav-tab-btn" data-tab="tab-bgm">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        BGM & Ambience
+      </button>
+    </nav>
+
+    <!-- Header Actions -->
+    <div class="header-actions">
+      <button id="btn-save-project" class="btn-icon" title="Simpan Proyek (.voxproj)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+      </button>
+      <button id="btn-load-project" class="btn-icon" title="Buka Proyek">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 6h-8l-2-2H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm0 12H4V8h16v10z"/></svg>
+      </button>
+      <input type="file" id="input-import-project" accept=".json,.voxproj" style="display: none;">
+
+      <button id="btn-export-srt" class="btn-icon" title="Export Subtitle (.SRT)">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 7H9.5v-.5h-2v3h2V13H11v1c0 .55-.45 1-1 1H7c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1zm7 0h-1.5v-.5h-2v3h2V13H18v1c0 .55-.45 1-1 1h-3c-.55 0-1-.45-1-1v-4c0-.55.45-1 1-1h3c.55 0 1 .45 1 1v1z"/></svg>
+      </button>
+      <button id="btn-export-wav" class="btn-emerald" id="btn-master-export">
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+        Export WAV Master
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Studio Workspace -->
+  <main class="studio-workspace">
+    <!-- Center Stage -->
+    <section class="main-stage">
+
+      <!-- ================= TAB 1: SCRIPT & TTS STUDIO ================= -->
+      <div id="tab-tts" class="tab-content active">
+        <!-- Script Toolbar -->
+        <div class="glass-panel script-toolbar">
+          <div class="template-selector-wrap">
+            <span class="panel-subtitle">Template Naskah:</span>
+            <select id="select-script-template" class="select-custom">
+              <option value="kopi">☕ Iklan Kopi Nusantara (Komersial)</option>
+              <option value="pria_trailer">🧔 Trailer Sinematik (Suara Pria Bariton)</option>
+              <option value="dialog_pria_wanita">🎭 Percakapan Dialog (Pria & Wanita)</option>
+              <option value="trailer">🎬 Trailer Sci-Fi Cosmic (Epik)</option>
+              <option value="podcast">🎙️ Intro & Hook Podcast</option>
+              <option value="edukasi">📚 Video Tutorial & Edukasi</option>
+              <option value="custom">✏️ Naskah Kosong / Kustom</option>
+            </select>
+
+            <span class="panel-subtitle" style="margin-left: 8px;">Bahasa:</span>
+            <select id="select-lang-filter" class="select-custom">
+              <option value="id">Bahasa Indonesia (id-ID)</option>
+              <option value="en">English (All Accents)</option>
+              <option value="all">Semua Bahasa</option>
+            </select>
+
+            <span class="panel-subtitle" style="margin-left: 8px;">Karakter:</span>
+            <select id="select-gender-filter" class="select-custom">
+              <option value="all">Semua Karakter</option>
+              <option value="male" selected>🧔 Suara Laki-laki (Pria)</option>
+              <option value="female">👩 Suara Perempuan (Wanita)</option>
+            </select>
+          </div>
+
+          <div class="script-stats-badge">
+            <div class="stat-item"><span class="stat-dot"></span><span id="stat-word-count">0</span> Kata</div>
+            <div class="stat-item"><span class="stat-dot" style="background: var(--accent-purple);"></span><span id="stat-read-time">00:00</span> Estimasi Durasi</div>
+          </div>
+
+          <div style="display: flex; gap: 8px;">
+            <button id="btn-play-full-script" class="btn-primary">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+              Putar Naskah AI
+            </button>
+            <button id="btn-stop-script" class="btn-icon" title="Hentikan TTS">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Script Blocks Container -->
+        <div id="script-blocks-container" class="script-blocks-container">
+          <!-- Dynamic Script Cards inserted via app.js -->
+        </div>
+
+        <!-- Add Block Button -->
+        <button id="btn-add-block" class="btn-add-block">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
+          Tambah Baris / Adegan Naskah Baru
+        </button>
+      </div>
+
+      <!-- ================= TAB 2: LIVE MIC STUDIO & TELEPROMPTER ================= -->
+      <div id="tab-mic" class="tab-content">
+        <div class="mic-studio-grid">
+          <!-- Left: Mic Console -->
+          <div class="recorder-console">
+            <div class="panel-title" style="align-self: flex-start;">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+              Booth Perekam Suara
+            </div>
+
+            <!-- Big Timer -->
+            <div id="record-timer" class="record-timer-display">00:00.0</div>
+
+            <!-- Big Record Button -->
+            <button id="btn-toggle-record" class="record-btn-large" title="Mulai / Berhenti Merekam">
+              <svg id="record-btn-icon" viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/></svg>
+            </button>
+            <span id="record-status-label" class="panel-subtitle">Klik untuk Mulai Merekam (Dengan Hitung Mundur 3s)</span>
+
+            <!-- VU Meter -->
+            <div class="vu-meter-rack">
+              <div class="vu-labels">
+                <span>-60 dB</span>
+                <span>-18</span>
+                <span>-6</span>
+                <span style="display: flex; align-items: center; gap: 4px;">
+                  0 dB
+                  <span id="vu-clip-led" class="vu-clip-indicator" title="Clip / Distorsi"></span>
+                </span>
+              </div>
+              <div class="vu-bar-track">
+                <div id="vu-fill-bar" class="vu-bar-fill"></div>
+              </div>
+              <div style="display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--text-muted);">
+                <span>Level Sinyal: <b id="vu-db-text" style="color: var(--accent-cyan);">-60.0 dB</b></span>
+                <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
+                  <span>Gain Mic:</span>
+                  <input type="range" id="slider-mic-gain" min="0.5" max="2.5" step="0.1" value="1.0" style="width: 70px;">
+                </label>
+              </div>
+            </div>
+
+            <!-- Takes Manager -->
+            <div style="width: 100%; text-align: left; margin-top: 10px;">
+              <div class="panel-title" style="font-size: 0.9rem; margin-bottom: 8px;">
+                Daftar Rekaman (Takes):
+              </div>
+              <div id="takes-list-container" class="takes-rack">
+                <div style="text-align: center; color: var(--text-muted); font-size: 0.8rem; padding: 12px;">
+                  Belum ada rekaman suara. Tekan tombol rekam di atas.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right: Teleprompter -->
+          <div class="prompter-container-box">
+            <div class="prompter-toolbar">
+              <span class="panel-title" style="font-size: 0.9rem;">
+                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14z"/></svg>
+                Teleprompter Cerdas
+              </span>
+
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <button id="btn-prompter-play" class="btn-icon" title="Mulai / Jeda Auto-Scroll">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button id="btn-prompter-reset" class="btn-icon" title="Kembali ke Awal">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+                </button>
+                <button id="btn-prompter-mirror-h" class="btn-icon" title="Cermin Horizontal (Mirror Glass)">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+                </button>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: var(--text-muted);">
+                  Kecepatan:
+                  <input type="range" id="slider-prompter-speed" min="15" max="120" value="40" style="width: 60px;">
+                </label>
+                <label style="display: flex; align-items: center; gap: 4px; font-size: 0.72rem; color: var(--text-muted);">
+                  Font:
+                  <input type="range" id="slider-prompter-font" min="20" max="52" value="30" style="width: 50px;">
+                </label>
+              </div>
+            </div>
+
+            <div id="prompter-viewport" class="prompter-viewport">
+              <div id="prompter-text" class="prompter-scroll-text">
+                <!-- Syncs with script blocks -->
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 3: DSP AUDIO EFFECTS RACK ================= -->
+      <div id="tab-fx" class="tab-content">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              DSP Studio Effects & Vocal Processing
+            </h2>
+            <p class="panel-subtitle">Proses vokal rekaman dan TTS dengan standar broadcast, radio, film trailer, dan studio pro.</p>
+          </div>
+        </div>
+
+        <!-- FX Modules Grid -->
+        <div class="fx-rack-grid">
+          <!-- Module 1: 3-Band Parametric EQ -->
+          <div class="fx-module-card">
+            <div class="fx-module-header">
+              <span class="fx-title">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M10 20h4V4h-4v16zm-6 0h4v-8H4v8zM16 9v11h4V9h-4z"/></svg>
+                Studio Equalizer (EQ)
+              </span>
+              <span class="panel-subtitle">3-Band Tone</span>
+            </div>
+
+            <div class="eq-faders-strip">
+              <div class="eq-band-col">
+                <span id="eq-val-low" class="eq-val-display">0 dB</span>
+                <input type="range" id="slider-eq-low" min="-12" max="12" step="0.5" value="0">
+                <span class="eq-band-label">Low (140Hz)</span>
+              </div>
+              <div class="eq-band-col">
+                <span id="eq-val-mid" class="eq-val-display">0 dB</span>
+                <input type="range" id="slider-eq-mid" min="-12" max="12" step="0.5" value="0">
+                <span class="eq-band-label">Mid (2.5kHz)</span>
+              </div>
+              <div class="eq-band-col">
+                <span id="eq-val-high" class="eq-val-display">0 dB</span>
+                <input type="range" id="slider-eq-high" min="-12" max="12" step="0.5" value="0">
+                <span class="eq-band-label">High (8.5kHz)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Module 2: Convolution Reverb -->
+          <div class="fx-module-card">
+            <div class="fx-module-header">
+              <span class="fx-title">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+                Studio Reverb (Akustik Ruang)
+              </span>
+              <select id="select-reverb-preset" class="select-custom" style="padding: 4px 8px; font-size: 0.75rem;">
+                <option value="warm-studio">Warm Studio Room</option>
+                <option value="treated-booth">Crisp Treated Booth</option>
+                <option value="concert-hall">Epic Concert Hall</option>
+                <option value="space-cathedral">Space Cathedral</option>
+                <option value="off">Bypass (Mati)</option>
+              </select>
+            </div>
+
+            <div class="fader-row">
+              <div class="fader-header">
+                <span>Reverb Wet / Intensitas:</span>
+                <span id="reverb-wet-val" class="fader-val">15%</span>
+              </div>
+              <input type="range" id="slider-reverb-wet" class="fader-slider" min="0" max="0.8" step="0.02" value="0.15">
+            </div>
+            <p class="panel-subtitle" style="font-size: 0.72rem;">Mensimulasikan pantulan akustik bilik rekaman profesional secara real-time.</p>
+          </div>
+
+          <!-- Module 3: Echo & Delay -->
+          <div class="fx-module-card">
+            <div class="fx-module-header">
+              <span class="fx-title">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46A7.93 7.93 0 0 0 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74A7.93 7.93 0 0 0 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z"/></svg>
+                Studio Delay / Echo
+              </span>
+              <span id="delay-wet-val" class="panel-subtitle">Bypass</span>
+            </div>
+
+            <div class="fader-row">
+              <div class="fader-header">
+                <span>Delay Time (Tempo):</span>
+                <span id="delay-time-val" class="fader-val">250 ms</span>
+              </div>
+              <input type="range" id="slider-delay-time" class="fader-slider" min="0.05" max="0.8" step="0.05" value="0.25">
+            </div>
+
+            <div class="fader-row">
+              <div class="fader-header">
+                <span>Delay Feedback:</span>
+                <span id="delay-fb-val" class="fader-val">20%</span>
+              </div>
+              <input type="range" id="slider-delay-feedback" class="fader-slider" min="0.05" max="0.7" step="0.05" value="0.20">
+            </div>
+
+            <div class="fader-row">
+              <div class="fader-header">
+                <span>Delay Wet Mix:</span>
+                <span id="delay-mix-val" class="fader-val">0%</span>
+              </div>
+              <input type="range" id="slider-delay-wet" class="fader-slider" min="0" max="0.6" step="0.05" value="0.0">
+            </div>
+          </div>
+
+          <!-- Module 4: Voice Character Presets -->
+          <div class="fx-module-card">
+            <div class="fx-module-header">
+              <span class="fx-title">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                Karakter Vokal & Filter
+              </span>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+              <button id="btn-char-clean" class="btn-icon active" style="width: 100%; font-size: 0.75rem; font-weight: 600;" data-preset="clean-natural">
+                🎙️ Alami (Studio)
+              </button>
+              <button id="btn-char-radio" class="btn-icon" style="width: 100%; font-size: 0.75rem; font-weight: 600;" data-preset="deep-broadcast">
+                📻 Radio Host (Bass)
+              </button>
+              <button id="btn-char-trailer" class="btn-icon" style="width: 100%; font-size: 0.75rem; font-weight: 600;" data-preset="cinema-trailer">
+                🎬 Trailer Movie
+              </button>
+              <button id="btn-char-vintage" class="btn-icon" style="width: 100%; font-size: 0.75rem; font-weight: 600;" data-preset="vintage-radio">
+                ☎️ Telepon / HT
+              </button>
+              <button id="btn-char-whisper" class="btn-icon" style="width: 100%; font-size: 0.75rem; font-weight: 600; grid-column: span 2;" data-preset="asmr-whisper">
+                🤫 ASMR & Air Whisper
+              </button>
+            </div>
+          </div>
+
+          <!-- Module 5: Dynamics Compressor & Auto-Ducking -->
+          <div class="fx-module-card" style="grid-column: span 2;">
+            <div class="fx-module-header">
+              <span class="fx-title">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 13H5v-2h14v2z"/></svg>
+                Auto-Ducking Musik & Broadcast Compressor
+              </span>
+              <label class="toggle-switch">
+                <input type="checkbox" id="toggle-ducking" checked>
+                <span class="slider-switch"></span>
+              </label>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+              <div>
+                <p class="panel-subtitle" style="margin-bottom: 8px;">
+                  <b>Auto-Ducking Cerdas:</b> Menurunkan volume BGM secara mulus ketika suara manusia terdengar, lalu menaikkannya kembali saat hening.
+                </p>
+                <div class="fader-row">
+                  <div class="fader-header">
+                    <span>Kedalaman Ducking BGM:</span>
+                    <span id="ducking-val" class="fader-val">-12 dB (25%)</span>
+                  </div>
+                  <input type="range" id="slider-ducking-amount" class="fader-slider" min="0.05" max="0.6" step="0.05" value="0.25">
+                </div>
+              </div>
+
+              <div>
+                <p class="panel-subtitle" style="margin-bottom: 8px;">
+                  <b>Studio Compressor / Limiter:</b> Meratakan dinamika suara agar vokal terdengar tebal, padat, dan tidak pecah (clipping).
+                </p>
+                <div style="display: flex; gap: 8px; font-family: var(--font-mono); font-size: 0.72rem; color: var(--accent-cyan); background: rgba(0,0,0,0.3); padding: 8px 12px; border-radius: var(--radius-sm);">
+                  <span>Threshold: -20dB</span> | <span>Ratio: 4:1</span> | <span>Attack: 5ms</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 4: BGM & AMBIENCE TAB ================= -->
+      <div id="tab-bgm" class="tab-content">
+        <div class="panel-header">
+          <div>
+            <h2 class="panel-title">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              Background Music & Sound Atmosphere
+            </h2>
+            <p class="panel-subtitle">Gunakan instrumen ambience sintetis prosedural langsung dari browser atau unggah audio musik sendiri.</p>
+          </div>
+        </div>
+
+        <div class="bgm-cards-grid">
+          <div id="bgm-card-none" class="bgm-preset-card active" data-mode="none">
+            <div class="bgm-card-icon">🔇</div>
+            <div class="bgm-card-title">Tanpa BGM</div>
+            <div class="bgm-card-desc">Hanya vokal murni tanpa latar belakang musik.</div>
+          </div>
+
+          <div id="bgm-card-lofi" class="bgm-preset-card" data-mode="lofi">
+            <div class="bgm-card-icon">☕</div>
+            <div class="bgm-card-title">Lo-Fi Chill Chords</div>
+            <div class="bgm-card-desc">Akord Rhodes hangat dan lembut untuk podcast & konten santai.</div>
+          </div>
+
+          <div id="bgm-card-scifi" class="bgm-preset-card" data-mode="scifi">
+            <div class="bgm-card-icon">🌌</div>
+            <div class="bgm-card-title">Sci-Fi Ambient Drone</div>
+            <div class="bgm-card-desc">Pad atmosferik futuristik dengan modulasi analog halus.</div>
+          </div>
+
+          <div id="bgm-card-rain" class="bgm-preset-card" data-mode="rain">
+            <div class="bgm-card-icon">🌧️</div>
+            <div class="bgm-card-title">Rain & Cozy Room</div>
+            <div class="bgm-card-desc">Hujan rintik menenangkan dengan filter frekuensi hangat.</div>
+          </div>
+        </div>
+
+        <div class="glass-panel" style="margin-top: 10px;">
+          <div class="panel-title" style="font-size: 0.95rem; margin-bottom: 8px;">
+            Atau Unggah Musik Latar Belakang Sendiri (.mp3 / .wav):
+          </div>
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <input type="file" id="input-bgm-file" accept="audio/*" class="select-custom" style="padding: 6px;">
+            <span id="bgm-custom-filename" class="panel-subtitle">Pilih file audio dari komputer Anda</span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Right Studio Monitor & Master Sidebar -->
+    <aside class="studio-sidebar">
+      <!-- Real-Time Spectrum Visualizer -->
+      <div class="visualizer-card">
+        <div class="visualizer-header">
+          <span class="vis-title">Master Output Monitor</span>
+          <div class="vis-mode-switch">
+            <button id="btn-vis-spectrum" class="vis-btn active">FFT</button>
+            <button id="btn-vis-oscilloscope" class="vis-btn">Wave</button>
+          </div>
+        </div>
+        <canvas id="master-visualizer-canvas" class="visualizer-canvas"></canvas>
+      </div>
+
+      <!-- Master Faders -->
+      <div class="glass-panel master-faders-panel">
+        <div class="panel-title" style="font-size: 0.95rem;">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 17v2h6v-2H3zM3 5v2h10V5H3zm10 16v-2h8v-2h-8v-2h-2v6h2zM7 9v2H3v2h4v2h2V9H7zm14 4v-2H11v2h10zm-6-4h2V7h4V5h-4V3h-2v6z"/></svg>
+          Mixer Volume Studio
+        </div>
+
+        <!-- Voice Fader -->
+        <div class="fader-row">
+          <div class="fader-header">
+            <span>Volume Voice / Naskah:</span>
+            <span id="label-fader-voice" class="fader-val">100%</span>
+          </div>
+          <input type="range" id="slider-master-voice" class="fader-slider" min="0" max="1.5" step="0.05" value="1.0">
+        </div>
+
+        <!-- BGM Fader -->
+        <div class="fader-row">
+          <div class="fader-header">
+            <span>Volume BGM / Ambience:</span>
+            <span id="label-fader-bgm" class="fader-val">35%</span>
+          </div>
+          <input type="range" id="slider-master-bgm" class="fader-slider" min="0" max="1.0" step="0.05" value="0.35">
+        </div>
+
+        <!-- Master Out Fader -->
+        <div class="fader-row" style="margin-top: 6px; padding-top: 10px; border-top: 1px solid var(--border-subtle);">
+          <div class="fader-header">
+            <span style="font-weight: 700; color: #fff;">Master Output Gain:</span>
+            <span id="label-fader-master" class="fader-val" style="color: #fff;">100%</span>
+          </div>
+          <input type="range" id="slider-master-out" class="fader-slider" min="0" max="1.2" step="0.05" value="1.0">
+        </div>
+      </div>
+
+      <!-- Quick Export Box -->
+      <div class="glass-panel" style="display: flex; flex-direction: column; gap: 10px;">
+        <div class="panel-title" style="font-size: 0.9rem;">
+          Panduan Cepat & Shortcut
+        </div>
+        <ul style="font-size: 0.75rem; color: var(--text-muted); padding-left: 16px; line-height: 1.8;">
+          <li><kbd style="color: #fff; background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px;">Spasi</kbd> : Putar / Jeda</li>
+          <li><kbd style="color: #fff; background: rgba(255,255,255,0.1); padding: 1px 4px; border-radius: 3px;">R</kbd> : Toggle Rekam Mic</li>
+          <li>Gunakan tag <code>[pause 1.5s]</code> dalam naskah untuk jeda napas yang natural.</li>
+          <li>Klik waveform di dock bawah untuk scrub posisi audio.</li>
+        </ul>
+      </div>
+    </aside>
+  </main>
+
+  <!-- Bottom Master Timeline & Waveform Dock -->
+  <footer class="studio-dock">
+    <div class="dock-controls-row">
+      <div class="transport-group">
+        <button id="btn-master-play" class="transport-btn play-master" title="Putar Suara Aktif (Spasi)">
+          <svg id="master-play-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        </button>
+        <button id="btn-master-stop" class="transport-btn" title="Stop">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 6h12v12H6z"/></svg>
+        </button>
+        <div id="timecode-display" class="transport-timecode">00:00.00</div>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 14px; font-size: 0.8rem;">
+        <span id="dock-track-status" style="color: var(--text-secondary);">Track: Naskah AI Siap</span>
+        <button id="btn-trim-audio" class="btn-icon" style="height: 28px; width: auto; padding: 0 10px; font-size: 0.75rem;" title="Reset Titik Potong">
+          ✂️ Reset Trim
+        </button>
+      </div>
+    </div>
+
+    <!-- Interactive Waveform Timeline Canvas -->
+    <canvas id="dock-waveform-canvas" class="waveform-dock-canvas"></canvas>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container"></div>
+
+  <!-- App Main Scripts -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
